@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const mongoose = require("mongoose");
 const path = require("path");
 
 dotenv.config();
@@ -70,9 +71,21 @@ app.get("/", (req, res) => {
 // ================= HEALTH CHECK =================
 
 app.get("/health", (req, res) => {
+  const dbConnected = mongoose.connection.readyState === 1;
+
+  if (!dbConnected) {
+    return res.status(503).json({
+      status: "error",
+      service: "MyGate Backend",
+      database: "disconnected",
+      timestamp: new Date().toISOString()
+    });
+  }
+
   res.status(200).json({
     status: "ok",
     service: "MyGate Backend",
+    database: "connected",
     timestamp: new Date().toISOString()
   });
 });
