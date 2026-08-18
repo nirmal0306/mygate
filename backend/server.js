@@ -67,6 +67,16 @@ app.get("/", (req, res) => {
   res.send("MyGate Backend Running 🚀");
 });
 
+// ================= HEALTH CHECK =================
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "MyGate Backend",
+    timestamp: new Date().toISOString()
+  });
+});
+
 
 // ================= SERVER =================
 
